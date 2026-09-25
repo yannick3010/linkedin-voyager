@@ -7,12 +7,22 @@ description: "Foundation for all LinkedIn automation in this repo: how to reach 
 
 All LinkedIn work runs as JavaScript inside a signed-in `https://www.linkedin.com/` tab, called through the chrome-devtools MCP's `evaluate_script` tool. The page's own session cookies authenticate every request. There is no separate API key, CLI, or bridge.
 
+## Setup check
+
+The browser tools come from the `linkedin-chrome` MCP server defined in `.mcp.json` (tools such as `mcp__linkedin-chrome__list_pages` and `mcp__linkedin-chrome__evaluate_script`). If those tools are missing, or `list_pages` errors or times out:
+
+1. Run `node scripts/doctor.mjs` from the repo root.
+2. Relay the first failure and its printed fix to the user. Don't guess at other causes, and don't try to control a browser any other way.
+3. After the user applies the fix, rerun the doctor. MCP config changes take effect only after restarting Claude Code in this folder.
+
+Use only the `linkedin-chrome` server for this repo, even if another Chrome or chrome-devtools server is available. That one may be attached to a different browser or account.
+
 ## Before any batch
 
 1. `list_pages`. Reuse an open `www.linkedin.com` tab. If none exists, `new_page` to `https://www.linkedin.com/feed/` and `select_page` it.
 2. Run [`snippets/me.js`](../../snippets/me.js) with `evaluate_script`.
 3. Require `ok: true`, HTTP 200, and the name/`publicIdentifier` the user expects to act as. Keep `profileUrn` for messaging.
-4. On failure, stop and tell the user. The usual fixes: sign in to LinkedIn in the automation Chrome, or start Chrome with remote debugging (see [`docs/chrome-setup.md`](../../docs/chrome-setup.md)).
+4. On failure, stop and run the setup check above.
 
 If every lookup in a batch fails, rerun the session check before assuming a block or rate limit. The selected tab is usually the problem.
 

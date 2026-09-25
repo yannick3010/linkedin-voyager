@@ -8,7 +8,8 @@ It works by running small JavaScript functions inside a Chrome tab where you're 
 
 ```
 AGENTS.md / CLAUDE.md     Entry point the agent reads first
-.mcp.json                 Connects the chrome-devtools MCP to your Chrome
+.mcp.json                 Connects the chrome-devtools MCP (as `linkedin-chrome`) to your Chrome
+scripts/doctor.mjs        Setup check: finds and explains whatever is misconfigured
 skills/
   linkedin-voyager/       Foundation: session check, snippets, limits, hard stops
   linkedin-connect/       Send blank connection requests to a list
@@ -27,8 +28,12 @@ Requirements: Claude Code, Node.js 18+ (for `npx`), Google Chrome.
 
 1. Clone this repo.
 2. Start a dedicated Chrome with remote debugging and sign in to LinkedIn. See [docs/chrome-setup.md](docs/chrome-setup.md).
-3. Open Claude Code in the repo folder and approve the `chrome-devtools` MCP server when prompted.
-4. Ask: *"Check my LinkedIn session."* It should reply with your name.
+3. Run the setup check and fix anything it flags:
+   ```bash
+   node scripts/doctor.mjs
+   ```
+4. Open Claude Code in the repo folder and approve the `linkedin-chrome` MCP server when prompted.
+5. Ask: *"Check my LinkedIn session."* It should reply with your name.
 
 ## Things to ask
 

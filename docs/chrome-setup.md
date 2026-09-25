@@ -32,11 +32,21 @@ Leave this window running while you use the skills. Minimizing it is fine.
 
 In that window, go to https://www.linkedin.com/ and sign in. The profile directory keeps the session, so you only do this once (until LinkedIn logs you out).
 
-## 3. Check the connection
+## 3. Run the setup check
 
-`http://127.0.0.1:9222/json/version` should return JSON in any browser. The repo's `.mcp.json` points the chrome-devtools MCP at that address. When you open Claude Code in this repo it will ask to enable the project MCP server. Approve it.
+From the repo folder:
+
+```bash
+node scripts/doctor.mjs
+```
+
+It checks Node, the debugging port, the MCP server, a LinkedIn tab, and your LinkedIn session, in that order, and prints the fix for the first thing that fails. It ends with "Signed in to LinkedIn as <you>" when everything works. It never sends anything.
 
 If Chrome shows an **"Allow remote debugging?"** prompt, click Allow in that dedicated window.
+
+## 4. Open Claude Code
+
+Open Claude Code in the repo folder. It will ask whether to enable the project MCP server **`linkedin-chrome`**. Approve it. Then ask: *"Check my LinkedIn session."*
 
 ## Troubleshooting
 
@@ -46,5 +56,7 @@ If Chrome shows an **"Allow remote debugging?"** prompt, click Allow in that ded
 | `me.js` returns `not_logged_in_or_wrong_tab` | Sign in to LinkedIn in the dedicated window, or make sure the selected tab is on `www.linkedin.com`. |
 | Every lookup fails | Usually the wrong tab is selected. Run `me.js` again before assuming a block. |
 | Login page, CAPTCHA, or "unusual activity" | Stop. Resolve it by hand in the browser and wait before running anything else. |
+| Claude says it has no browser tools, or uses a different browser | You declined the `linkedin-chrome` prompt, or another config is overriding it. Run `claude mcp list` in the repo folder to see what's active. `node scripts/doctor.mjs` flags both cases with the exact command to fix them. Restart Claude Code afterwards. |
+| You already use chrome-devtools-mcp for other work | No conflict. This repo's server is named `linkedin-chrome` so it sits alongside yours. Keep LinkedIn work on `linkedin-chrome` so it always hits the signed-in automation profile. |
 
 Port 9222 gives full control of that browser to anything running on your machine. Only run it on a machine you trust, and don't expose the port to your network.

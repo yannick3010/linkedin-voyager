@@ -11,7 +11,7 @@ This repo lets an agent operate LinkedIn through Voyager, LinkedIn's internal we
 | Check who accepted, list or withdraw pending invitations | [`skills/linkedin-check-connect`](skills/linkedin-check-connect/SKILL.md) |
 | Read the inbox, draft and send direct messages | [`skills/linkedin-message`](skills/linkedin-message/SKILL.md) |
 
-Reference: [`docs/voyager-api.md`](docs/voyager-api.md) (endpoints, response shapes, gotchas). Runnable calls: [`snippets/`](snippets/). Browser setup: [`docs/chrome-setup.md`](docs/chrome-setup.md).
+Reference: [`docs/voyager-api.md`](docs/voyager-api.md) (endpoints, response shapes, gotchas). Runnable calls: [`snippets/`](snippets/). Browser setup: [`docs/chrome-setup.md`](docs/chrome-setup.md). Setup check: `node scripts/doctor.mjs`.
 
 ## Non-negotiables
 
@@ -20,4 +20,4 @@ Reference: [`docs/voyager-api.md`](docs/voyager-api.md) (endpoints, response sha
 - At least 3 s between invitations, at most 20 per batch, never parallel.
 - Never output or store cookies, CSRF tokens, request headers, or the DevTools WebSocket URL.
 - Use only the chrome-devtools MCP `evaluate_script` path. Don't build a separate CDP client or daemon; those have proven fragile (session drops, repeated re-authorization).
-- If the chrome-devtools MCP isn't connected, point the user to `docs/chrome-setup.md` instead of trying to control a browser another way.
+- Browser tools come only from the `linkedin-chrome` MCP server in `.mcp.json`. If they're missing or failing, run `node scripts/doctor.mjs` and relay its fix. Don't try to control a browser another way.
